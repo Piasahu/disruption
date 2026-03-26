@@ -1,0 +1,1122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Innovation Timeline Dashboard 1965-2025</title>
+    <style>
+        :root {
+            --color-primary: #2180A0;
+            --color-primary-hover: #1a6480;
+            --color-disruptive: #C01527;
+            --color-non-disruptive: #4CAF50;
+            --color-bg: #F5F5F5;
+            --color-surface: #FFFFFF;
+            --color-text: #133435;
+            --color-border: #E0E0E0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--color-bg);
+            color: var(--color-text);
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            color: var(--color-text);
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: #666;
+        }
+
+        .controls {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            background: var(--color-surface);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .search-box {
+            flex: 1;
+            min-width: 250px;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 12px 16px;
+            font-size: 1rem;
+            border: 2px solid var(--color-border);
+            border-radius: 6px;
+            transition: border-color 0.3s;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: var(--color-primary);
+        }
+
+        .filter-buttons {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .filter-btn {
+            padding: 10px 16px;
+            border: 2px solid var(--color-border);
+            background: var(--color-surface);
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+        }
+
+        .filter-btn:hover {
+            background: var(--color-primary);
+            color: white;
+            border-color: var(--color-primary);
+        }
+
+        .filter-btn.active {
+            background: var(--color-primary);
+            color: white;
+            border-color: var(--color-primary);
+        }
+
+        .timeline-wrapper {
+            display: grid;
+            grid-template-columns: 1fr 3fr;
+            gap: 30px;
+            align-items: start;
+        }
+
+        .years-sidebar {
+            background: var(--color-surface);
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            max-height: 700px;
+            overflow-y: auto;
+            position: sticky;
+            top: 20px;
+        }
+
+        .years-sidebar h3 {
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+            color: var(--color-text);
+        }
+
+        .year-btn {
+            width: 100%;
+            padding: 10px 12px;
+            margin-bottom: 8px;
+            background: var(--color-bg);
+            border: 2px solid var(--color-border);
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+            text-align: left;
+            font-weight: 500;
+        }
+
+        .year-btn:hover {
+            background: var(--color-primary);
+            color: white;
+            border-color: var(--color-primary);
+        }
+
+        .year-btn.active {
+            background: var(--color-primary);
+            color: white;
+            border-color: var(--color-primary);
+        }
+
+        .innovations-container {
+            background: var(--color-surface);
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            min-height: 400px;
+        }
+
+        .innovations-title {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            color: var(--color-text);
+        }
+
+        .innovation-item {
+            background: var(--color-bg);
+            border-left: 5px solid var(--color-primary);
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 6px;
+            animation: slideIn 0.4s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .innovation-item.disruptive {
+            border-left-color: var(--color-disruptive);
+        }
+
+        .innovation-item.non-disruptive {
+            border-left-color: var(--color-non-disruptive);
+        }
+
+        .innovation-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .innovation-name {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--color-text);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: white;
+        }
+
+        .badge.disruptive {
+            background: var(--color-disruptive);
+        }
+
+        .badge.non-disruptive {
+            background: var(--color-non-disruptive);
+        }
+
+        .innovation-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .detail-item {
+            background: white;
+            padding: 12px;
+            border-radius: 4px;
+            border: 1px solid var(--color-border);
+        }
+
+        .detail-label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--color-primary);
+            margin-bottom: 5px;
+            text-transform: uppercase;
+        }
+
+        .detail-value {
+            font-size: 0.95rem;
+            color: var(--color-text);
+            word-break: break-word;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 40px 20px;
+            color: #999;
+            font-size: 1.1rem;
+        }
+
+        .stats {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .stat-box {
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-hover) 100%);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 6px;
+            flex: 1;
+            min-width: 150px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 1.8rem;
+            font-weight: 700;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            opacity: 0.9;
+        }
+
+        @media (max-width: 1024px) {
+            .timeline-wrapper {
+                grid-template-columns: 1fr;
+            }
+
+            .years-sidebar {
+                max-height: 400px;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .controls {
+                flex-direction: column;
+            }
+
+            .search-box {
+                min-width: 100%;
+            }
+
+            .filter-buttons {
+                flex-wrap: wrap;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .years-sidebar {
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+                max-height: 150px;
+                gap: 8px;
+            }
+
+            .year-btn {
+                margin-bottom: 0;
+                padding: 8px;
+                font-size: 0.85rem;
+            }
+
+            .innovation-header {
+                flex-direction: column;
+            }
+
+            .innovation-details {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🚀 Innovation Timeline Dashboard</h1>
+            <p class="subtitle">Major innovations from 1965 to 2025 - Explore, Search, and Discover</p>
+        </header>
+
+        <div class="controls">
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="Search innovations, innovators, companies...">
+            </div>
+            <div class="filter-buttons">
+                <button class="filter-btn active" data-filter="all">All</button>
+                <button class="filter-btn" data-filter="disruptive">🔥 Disruptive</button>
+                <button class="filter-btn" data-filter="non-disruptive">✓ Non-Disruptive</button>
+            </div>
+        </div>
+
+        <div class="stats" id="stats"></div>
+
+        <div class="timeline-wrapper">
+            <div class="years-sidebar">
+                <h3>Select Year</h3>
+                <div id="yearsList"></div>
+            </div>
+
+            <div class="innovations-container">
+                <div class="innovations-title" id="title">Select a year to view innovations</div>
+                <div id="innovationsList"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const innovations = {
+            1965: [
+                {
+                    name: "Moore's Law",
+                    innovator: "Gordon Moore",
+                    company: "Intel/Fairchild",
+                    country: "United States",
+                    description: "Observation that transistor count on chips doubles every 18 months",
+                    type: "disruptive"
+                },
+                {
+                    name: "Kevlar",
+                    innovator: "Stephanie Kwolek",
+                    company: "DuPont",
+                    country: "United States",
+                    description: "High-strength polymer stronger than steel, used in bulletproof vests",
+                    type: "disruptive"
+                }
+            ],
+            1967: [
+                {
+                    name: "Floppy Disk",
+                    innovator: "IBM Engineers",
+                    company: "IBM",
+                    country: "United States",
+                    description: "First floppy disk for data storage and portability",
+                    type: "non-disruptive"
+                },
+                {
+                    name: "Handheld Calculator",
+                    innovator: "Texas Instruments",
+                    company: "Texas Instruments",
+                    country: "United States",
+                    description: "First electronic handheld calculator, pocket-sized computing",
+                    type: "disruptive"
+                }
+            ],
+            1968: [
+                {
+                    name: "Computer Mouse",
+                    innovator: "Douglas Engelbart",
+                    company: "Stanford Research Institute",
+                    country: "United States",
+                    description: "Graphical user interface controller device",
+                    type: "disruptive"
+                },
+                {
+                    name: "Liquid Crystal Display (LCD)",
+                    innovator: "RCA Laboratories",
+                    company: "RCA",
+                    country: "United States",
+                    description: "First video image generation using liquid crystals",
+                    type: "non-disruptive"
+                }
+            ],
+            1969: [
+                {
+                    name: "Apollo 11 Moon Landing",
+                    innovator: "NASA Team",
+                    company: "NASA",
+                    country: "United States",
+                    description: "First human moon landing and space exploration milestone",
+                    type: "disruptive"
+                },
+                {
+                    name: "ATM",
+                    innovator: "Banking Engineers",
+                    company: "Bank of America",
+                    country: "United States",
+                    description: "First automated teller machine for banking convenience",
+                    type: "disruptive"
+                },
+                {
+                    name: "ARPANET",
+                    innovator: "ARPA/PARC",
+                    company: "Defense Advanced Research Projects Agency",
+                    country: "United States",
+                    description: "Foundation of the internet using packet switching",
+                    type: "disruptive"
+                }
+            ],
+            1970: [
+                {
+                    name: "Fiber Optics",
+                    innovator: "Charles K. Kao",
+                    company: "Bell Labs",
+                    country: "United States",
+                    description: "First ultrapure optical fiber for long-distance communication",
+                    type: "disruptive"
+                }
+            ],
+            1971: [
+                {
+                    name: "Floppy Disk Drive",
+                    innovator: "Xerox PARC",
+                    company: "Xerox",
+                    country: "United States",
+                    description: "First laser printer for desktop printing",
+                    type: "non-disruptive"
+                },
+                {
+                    name: "Intel 4004 Microprocessor",
+                    innovator: "Intel Engineers",
+                    company: "Intel",
+                    country: "United States",
+                    description: "First commercial microprocessor",
+                    type: "disruptive"
+                }
+            ],
+            1972: [
+                {
+                    name: "Pong Video Game",
+                    innovator: "Nolan Bushnell & Ted Dabney",
+                    company: "Atari",
+                    country: "United States",
+                    description: "First commercially successful video game",
+                    type: "disruptive"
+                },
+                {
+                    name: "MRI Technology",
+                    innovator: "Paul Lauterbur",
+                    company: "Medical Research",
+                    country: "United States",
+                    description: "Magnetic resonance imaging for medical diagnostics",
+                    type: "disruptive"
+                }
+            ],
+            1975: [
+                {
+                    name: "Personal Computer",
+                    innovator: "Steve Wozniak & Steve Jobs",
+                    company: "Apple",
+                    country: "United States",
+                    description: "Apple I microcomputer for consumer market",
+                    type: "disruptive"
+                },
+                {
+                    name: "Microsoft Founded",
+                    innovator: "Bill Gates & Paul Allen",
+                    company: "Microsoft",
+                    country: "United States",
+                    description: "Software company revolutionizing computing",
+                    type: "disruptive"
+                }
+            ],
+            1977: [
+                {
+                    name: "Apple II",
+                    innovator: "Steve Wozniak",
+                    company: "Apple",
+                    country: "United States",
+                    description: "First personal computer with color graphics",
+                    type: "disruptive"
+                }
+            ],
+            1980: [
+                {
+                    name: "Walkman",
+                    innovator: "Sony Engineers",
+                    company: "Sony",
+                    country: "Japan",
+                    description: "Portable cassette player revolutionizing music consumption",
+                    type: "disruptive"
+                }
+            ],
+            1981: [
+                {
+                    name: "IBM PC",
+                    innovator: "IBM Team",
+                    company: "IBM",
+                    country: "United States",
+                    description: "Personal computer that defined industry standards",
+                    type: "disruptive"
+                }
+            ],
+            1983: [
+                {
+                    name: "Compact Disc (CD)",
+                    innovator: "Philips & Sony Engineers",
+                    company: "Philips/Sony",
+                    country: "Netherlands/Japan",
+                    description: "Digital audio storage replacing vinyl records",
+                    type: "disruptive"
+                }
+            ],
+            1989: [
+                {
+                    name: "World Wide Web",
+                    innovator: "Tim Berners-Lee",
+                    company: "CERN",
+                    country: "Switzerland",
+                    description: "Hypertext system revolutionizing information sharing",
+                    type: "disruptive"
+                }
+            ],
+            1990: [
+                {
+                    name: "Hubble Space Telescope",
+                    innovator: "NASA/ESA",
+                    company: "NASA/ESA",
+                    country: "United States/Europe",
+                    description: "Revolutionary space observatory for astronomical research",
+                    type: "non-disruptive"
+                }
+            ],
+            1991: [
+                {
+                    name: "Linux Operating System",
+                    innovator: "Linus Torvalds",
+                    company: "Open Source",
+                    country: "Finland",
+                    description: "Free, open-source operating system",
+                    type: "disruptive"
+                }
+            ],
+            1995: [
+                {
+                    name: "Windows 95",
+                    innovator: "Microsoft",
+                    company: "Microsoft",
+                    country: "United States",
+                    description: "Operating system bringing GUI to mass market",
+                    type: "disruptive"
+                },
+                {
+                    name: "Amazon Founded",
+                    innovator: "Jeff Bezos",
+                    company: "Amazon",
+                    country: "United States",
+                    description: "E-commerce pioneer changing retail landscape",
+                    type: "disruptive"
+                },
+                {
+                    name: "eBay Founded",
+                    innovator: "Pierre Omidyar",
+                    company: "eBay",
+                    country: "United States",
+                    description: "Online auction and marketplace platform",
+                    type: "disruptive"
+                }
+            ],
+            1998: [
+                {
+                    name: "Google Search",
+                    innovator: "Larry Page & Sergey Brin",
+                    company: "Google",
+                    country: "United States",
+                    description: "Revolutionary search engine indexing the web",
+                    type: "disruptive"
+                }
+            ],
+            2000: [
+                {
+                    name: "Camera Phone",
+                    innovator: "Sharp Engineers",
+                    company: "Sharp",
+                    country: "Japan",
+                    description: "First camera phone integrating photography into mobile",
+                    type: "disruptive"
+                }
+            ],
+            2001: [
+                {
+                    name: "iPod",
+                    innovator: "Apple Team",
+                    company: "Apple",
+                    country: "United States",
+                    description: "Portable digital audio player revolutionizing music",
+                    type: "disruptive"
+                },
+                {
+                    name: "3G Network",
+                    innovator: "Telecommunications Engineers",
+                    company: "Multiple Telecom",
+                    country: "Global",
+                    description: "Third generation mobile network enabling multimedia",
+                    type: "non-disruptive"
+                }
+            ],
+            2002: [
+                {
+                    name: "Cloud Computing",
+                    innovator: "Amazon/Salesforce",
+                    company: "Amazon Web Services",
+                    country: "United States",
+                    description: "On-demand computing resources revolutionizing IT",
+                    type: "disruptive"
+                }
+            ],
+            2003: [
+                {
+                    name: "Human Genome Sequence",
+                    innovator: "Human Genome Project",
+                    company: "International Consortium",
+                    country: "Global",
+                    description: "Complete DNA sequence enabling personalized medicine",
+                    type: "disruptive"
+                }
+            ],
+            2004: [
+                {
+                    name: "Facebook",
+                    innovator: "Mark Zuckerberg",
+                    company: "Facebook",
+                    country: "United States",
+                    description: "Social media platform connecting billions of people",
+                    type: "disruptive"
+                }
+            ],
+            2005: [
+                {
+                    name: "YouTube",
+                    innovator: "Steve Chen, Chad Hurley, Karim Kamangar",
+                    company: "YouTube",
+                    country: "United States",
+                    description: "Video sharing platform revolutionizing media consumption",
+                    type: "disruptive"
+                },
+                {
+                    name: "Google Maps",
+                    innovator: "Google Team",
+                    company: "Google",
+                    country: "United States",
+                    description: "Mapping and navigation service transforming GIS",
+                    type: "disruptive"
+                }
+            ],
+            2006: [
+                {
+                    name: "Twitter",
+                    innovator: "Jack Dorsey, Noah Glass, Biz Stone",
+                    company: "Twitter",
+                    country: "United States",
+                    description: "Microblogging platform revolutionizing information sharing",
+                    type: "disruptive"
+                }
+            ],
+            2007: [
+                {
+                    name: "iPhone",
+                    innovator: "Steve Jobs & Apple Team",
+                    company: "Apple",
+                    country: "United States",
+                    description: "Smartphone combining phone, iPod, and internet device",
+                    type: "disruptive"
+                },
+                {
+                    name: "Tesla Roadster",
+                    innovator: "Elon Musk & Tesla Team",
+                    company: "Tesla",
+                    country: "United States",
+                    description: "First production electric vehicle with lithium-ion batteries",
+                    type: "disruptive"
+                }
+            ],
+            2008: [
+                {
+                    name: "Bitcoin",
+                    innovator: "Satoshi Nakamoto",
+                    company: "Cryptocurrency",
+                    country: "Unknown",
+                    description: "First decentralized cryptocurrency using blockchain",
+                    type: "disruptive"
+                }
+            ],
+            2010: [
+                {
+                    name: "iPad",
+                    innovator: "Apple Team",
+                    company: "Apple",
+                    country: "United States",
+                    description: "Tablet computer creating new device category",
+                    type: "disruptive"
+                },
+                {
+                    name: "Instagram",
+                    innovator: "Kevin Systrom & Mike Krieger",
+                    company: "Instagram",
+                    country: "United States",
+                    description: "Photo-sharing social media transforming visual communication",
+                    type: "disruptive"
+                }
+            ],
+            2011: [
+                {
+                    name: "Siri AI Assistant",
+                    innovator: "Apple/Siri Team",
+                    company: "Apple",
+                    country: "United States",
+                    description: "Voice-controlled AI assistant for smartphones",
+                    type: "disruptive"
+                },
+                {
+                    name: "Twitch",
+                    innovator: "Justin Kan & Emmet Shear",
+                    company: "Twitch",
+                    country: "United States",
+                    description: "Live streaming platform for gaming and entertainment",
+                    type: "disruptive"
+                }
+            ],
+            2012: [
+                {
+                    name: "Curiosity Mars Rover",
+                    innovator: "NASA Team",
+                    company: "NASA",
+                    country: "United States",
+                    description: "Advanced planetary exploration rover on Mars",
+                    type: "non-disruptive"
+                }
+            ],
+            2013: [
+                {
+                    name: "Lab-Grown Meat",
+                    innovator: "Mark Post",
+                    company: "Mosa Meat",
+                    country: "Netherlands",
+                    description: "First cultured beef burger from animal cells",
+                    type: "disruptive"
+                }
+            ],
+            2014: [
+                {
+                    name: "Predictive Text AI",
+                    innovator: "Multiple AI Researchers",
+                    company: "Tech Companies",
+                    country: "Global",
+                    description: "Machine learning powered text prediction",
+                    type: "non-disruptive"
+                }
+            ],
+            2015: [
+                {
+                    name: "AlphaGo AI",
+                    innovator: "DeepMind/Google",
+                    company: "Google DeepMind",
+                    country: "United Kingdom/United States",
+                    description: "AI defeating world Go champion, breakthrough in AI",
+                    type: "disruptive"
+                },
+                {
+                    name: "Apple Watch",
+                    innovator: "Apple Team",
+                    company: "Apple",
+                    country: "United States",
+                    description: "Wearable smartwatch for health and communication",
+                    type: "disruptive"
+                }
+            ],
+            2016: [
+                {
+                    name: "Pokemon Go",
+                    innovator: "Niantic Team",
+                    company: "Niantic",
+                    country: "United States",
+                    description: "Augmented reality mobile game changing gaming landscape",
+                    type: "disruptive"
+                },
+                {
+                    name: "Spot Robot Dog",
+                    innovator: "Boston Dynamics",
+                    company: "Boston Dynamics",
+                    country: "United States",
+                    description: "Advanced quadruped robot for automation",
+                    type: "disruptive"
+                }
+            ],
+            2017: [
+                {
+                    name: "Tesla Model 3",
+                    innovator: "Elon Musk & Tesla Team",
+                    company: "Tesla",
+                    country: "United States",
+                    description: "Mass-market electric vehicle changing automotive",
+                    type: "disruptive"
+                }
+            ],
+            2018: [
+                {
+                    name: "TikTok",
+                    innovator: "Zhang Yiming",
+                    company: "ByteDance",
+                    country: "China",
+                    description: "Short-form video platform revolutionizing social media",
+                    type: "disruptive"
+                }
+            ],
+            2019: [
+                {
+                    name: "Quantum Supremacy",
+                    innovator: "Google AI Team",
+                    company: "Google",
+                    country: "United States",
+                    description: "Quantum computer performing impossible classical calculations",
+                    type: "disruptive"
+                }
+            ],
+            2020: [
+                {
+                    name: "mRNA Vaccines",
+                    innovator: "Pfizer/BioNTech & Moderna",
+                    company: "Pfizer/Moderna",
+                    country: "Germany/United States",
+                    description: "COVID-19 mRNA vaccines developed at unprecedented speed",
+                    type: "disruptive"
+                },
+                {
+                    name: "Solar Cheapest Electricity",
+                    innovator: "Energy Researchers",
+                    company: "Multiple Energy Companies",
+                    country: "Global",
+                    description: "Solar becomes cheapest electricity source in history",
+                    type: "disruptive"
+                }
+            ],
+            2021: [
+                {
+                    name: "James Webb Space Telescope",
+                    innovator: "NASA/ESA/CSA",
+                    company: "NASA/ESA/CSA",
+                    country: "Multiple Countries",
+                    description: "Revolutionary space telescope with origami-like unfold",
+                    type: "disruptive"
+                }
+            ],
+            2022: [
+                {
+                    name: "ChatGPT",
+                    innovator: "OpenAI Team",
+                    company: "OpenAI",
+                    country: "United States",
+                    description: "Generative AI chatbot reaching 1M users in 5 days",
+                    type: "disruptive"
+                }
+            ],
+            2023: [
+                {
+                    name: "CRISPR Gene Editing",
+                    innovator: "UC Berkeley/CRISPR Therapeutics",
+                    company: "CRISPR Therapeutics",
+                    country: "United States",
+                    description: "Gene editing approved for treating sickle cell disease",
+                    type: "disruptive"
+                },
+                {
+                    name: "GPT-4",
+                    innovator: "OpenAI",
+                    company: "OpenAI",
+                    country: "United States",
+                    description: "Advanced multimodal AI model surpassing GPT-3.5",
+                    type: "non-disruptive"
+                }
+            ],
+            2024: [
+                {
+                    name: "Pig Kidney Transplant",
+                    innovator: "Maryland Medical Team",
+                    company: "University of Maryland Medical Center",
+                    country: "United States",
+                    description: "First successful pig kidney transplant to living human",
+                    type: "disruptive"
+                },
+                {
+                    name: "Grok AI",
+                    innovator: "xAI Team",
+                    company: "xAI/X",
+                    country: "United States",
+                    description: "Reasoning-based AI assistant integrating real-time data",
+                    type: "non-disruptive"
+                }
+            ],
+            2025: [
+                {
+                    name: "AI Agents",
+                    innovator: "Multiple AI Companies",
+                    company: "OpenAI/Google/Others",
+                    country: "Global",
+                    description: "Autonomous AI agents making independent decisions",
+                    type: "disruptive"
+                },
+                {
+                    name: "Advanced Robotics",
+                    innovator: "Boston Dynamics/Tesla",
+                    company: "Boston Dynamics/Tesla",
+                    country: "United States",
+                    description: "Humanoid robots entering workforce and manufacturing",
+                    type: "disruptive"
+                }
+            ]
+        };
+
+        let currentFilter = 'all';
+        let currentYear = null;
+        let searchTerm = '';
+
+        function getAllYears() {
+            return Object.keys(innovations).map(Number).sort((a, b) => a - b);
+        }
+
+        function initYearsList() {
+            const yearsList = document.getElementById('yearsList');
+            const years = getAllYears();
+            
+            years.forEach(year => {
+                const btn = document.createElement('button');
+                btn.className = 'year-btn';
+                btn.textContent = year;
+                btn.dataset.year = year;
+                btn.addEventListener('click', () => selectYear(year));
+                yearsList.appendChild(btn);
+            });
+        }
+
+        function selectYear(year) {
+            currentYear = year;
+            searchTerm = '';
+            document.getElementById('searchInput').value = '';
+            
+            document.querySelectorAll('.year-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelector(`[data-year="${year}"]`).classList.add('active');
+            
+            displayInnovations();
+        }
+
+        function displayInnovations() {
+            const container = document.getElementById('innovationsList');
+            const title = document.getElementById('title');
+            
+            if (!currentYear) {
+                container.innerHTML = '<div class="no-results">Select a year to view innovations</div>';
+                title.textContent = 'Select a year to view innovations';
+                return;
+            }
+
+            const yearInnovations = innovations[currentYear] || [];
+            let filtered = yearInnovations;
+
+            // Apply search filter
+            if (searchTerm) {
+                filtered = filtered.filter(inn => 
+                    inn.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    inn.innovator.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    inn.company.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    inn.country.toLowerCase().includes(searchTerm.toLowerCase())
+                );
+            }
+
+            // Apply type filter
+            if (currentFilter !== 'all') {
+                filtered = filtered.filter(inn => inn.type === currentFilter);
+            }
+
+            title.textContent = `Major Innovations in ${currentYear}`;
+
+            if (filtered.length === 0) {
+                container.innerHTML = '<div class="no-results">No innovations found matching your filters</div>';
+                return;
+            }
+
+            container.innerHTML = filtered.map(inn => `
+                <div class="innovation-item ${inn.type}">
+                    <div class="innovation-header">
+                        <div class="innovation-name">${inn.name}</div>
+                        <span class="badge ${inn.type}">${inn.type === 'disruptive' ? '🔥 Disruptive' : '✓ Non-Disruptive'}</span>
+                    </div>
+                    <div class="innovation-details">
+                        <div class="detail-item">
+                            <div class="detail-label">Innovator</div>
+                            <div class="detail-value">${inn.innovator}</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Company/Organization</div>
+                            <div class="detail-value">${inn.company}</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Country</div>
+                            <div class="detail-value">${inn.country}</div>
+                        </div>
+                        <div class="detail-item" style="grid-column: 1 / -1;">
+                            <div class="detail-label">Description</div>
+                            <div class="detail-value">${inn.description}</div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function updateStats() {
+            const statsContainer = document.getElementById('stats');
+            let totalInnovations = 0;
+            let disruptiveCount = 0;
+
+            Object.values(innovations).forEach(yearInnovations => {
+                yearInnovations.forEach(inn => {
+                    totalInnovations++;
+                    if (inn.type === 'disruptive') disruptiveCount++;
+                });
+            });
+
+            const nonDisruptiveCount = totalInnovations - disruptiveCount;
+
+            statsContainer.innerHTML = `
+                <div class="stat-box">
+                    <span class="stat-number">${totalInnovations}</span>
+                    <span class="stat-label">Total Innovations</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-number">${disruptiveCount}</span>
+                    <span class="stat-label">🔥 Disruptive</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-number">${nonDisruptiveCount}</span>
+                    <span class="stat-label">✓ Non-Disruptive</span>
+                </div>
+            `;
+        }
+
+        // Event listeners
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            searchTerm = e.target.value;
+            displayInnovations();
+        });
+
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                e.target.classList.add('active');
+                currentFilter = e.target.dataset.filter;
+                displayInnovations();
+            });
+        });
+
+        // Initialize
+        initYearsList();
+        updateStats();
+    </script>
+</body>
+</html>
